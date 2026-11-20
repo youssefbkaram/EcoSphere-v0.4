@@ -843,21 +843,3 @@
   white-space: nowrap;
   text-transform: capitalize;
 }
-
-/* dark mode support for dividers */
-:host-context(html.dark-mode) .section-divider::before {
-  background: linear-gradient(to right, rgba(255, 255, 255, 0.1), transparent);
-}
-
-:host-context(html.dark-mode) .divider-label {
-  color: #d1d5db;
-}
-
-/* inside shadow DOM, use CSS variables fallback */
-html.dark-mode .section-divider::before {
-  background: linear-gradient(to right, rgba(255, 255, 255, 0.1), transparent);
-}
-
-html.dark-mode .divider-label {
-  color: #d1d5db;
-}

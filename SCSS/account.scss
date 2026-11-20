@@ -193,72 +193,8 @@ body {
 }
 
 .pref-value {
-  position: relative;
-  cursor: pointer;
-  user-select: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
   color: global.$main-text-dark;
   font-size: global.$font-size-base;
-  padding: 0.4rem 0.8rem;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  transition: border-color 0.2s ease, background 0.2s ease;
-}
-
-.pref-value:hover {
-  border-color: global.$primary-500;
-  background: global.$primary-50;
-}
-
-.theme-selector i {
-  transition: transform 0.3s ease;
-}
-
-.theme-dropdown {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  background: white;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  margin-top: 0.5rem;
-  min-width: 120px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-5px);
-  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
-  z-index: 2000;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.theme-dropdown li {
-  padding: 0.6rem 1rem;
-  cursor: pointer;
-  transition: background 0.2s ease;
-}
-
-.theme-dropdown li:hover {
-  background: global.$primary-50;
-}
-
-.theme-dropdown li.selected {
-  font-weight: global.$font-weight-bold;
-  background: global.$primary-100;
-}
-
-.theme-dropdown.visible {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-}
-
-.pref-value.open .theme-selector i {
-  transform: rotate(180deg);
 }
 
 .edit-icon {

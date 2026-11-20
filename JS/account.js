@@ -17,17 +17,12 @@ document.addEventListener('DOMContentLoaded', function() {
   // load profile image
   loadProfileImage(user);
 
-  // load and apply theme preference
-  loadTheme();
-
   // attach global click handler for edit icons
   document.body.addEventListener('click', handleBodyClick);
   
   // setup image upload handlers
   setupImageUpload();
 
-  // initialize theme selector dropdown (prefs tab)
-  setupThemeSelector();
 });
 
 function loadProfileImage(user) {
@@ -38,67 +33,6 @@ function loadProfileImage(user) {
     imgEl.src = '../MultiMedia/Images/default-user-icon.webp';
   }
 }
-
-// theme helpers --------------------------------------------------
-function applyTheme(theme) {
-  document.body.setAttribute('data-theme', theme);
-  localStorage.setItem('theme', theme);
-}
-
-function loadTheme() {
-  const theme = localStorage.getItem('theme') || 'light';
-  applyTheme(theme);
-  const display = document.getElementById('currentTheme');
-  if (display) {
-    display.textContent = theme.charAt(0).toUpperCase() + theme.slice(1);
-  }
-  // highlight current option in dropdown if present
-  updateDropdownSelection(theme);
-}
-
-function updateDropdownSelection(theme) {
-  const selector = document.querySelector('.theme-selector');
-  if (!selector) return;
-  selector.querySelectorAll('.theme-dropdown li').forEach(li => {
-    if (li.dataset.theme === theme) {
-      li.classList.add('selected');
-    } else {
-      li.classList.remove('selected');
-    }
-  });
-}
-
-function setupThemeSelector() {
-  const selector = document.querySelector('.theme-selector');
-  if (!selector) return;
-  const display = selector.querySelector('#currentTheme');
-  const dropdown = selector.querySelector('.theme-dropdown');
-
-  selector.addEventListener('click', (e) => {
-    e.stopPropagation();
-    dropdown.classList.toggle('visible');
-    selector.classList.toggle('open');
-  });
-
-  selector.querySelectorAll('.theme-dropdown li').forEach(li => {
-    li.addEventListener('click', (e) => {
-      const t = li.dataset.theme;
-      applyTheme(t);
-      updateDropdownSelection(t);
-      if (display) display.textContent = t.charAt(0).toUpperCase() + t.slice(1);
-      dropdown.classList.remove('visible');
-      selector.classList.remove('open');
-    });
-  });
-
-  document.addEventListener('click', (e) => {
-    if (selector && !selector.contains(e.target)) {
-      dropdown.classList.remove('visible');
-      selector.classList.remove('open');
-    }
-  });
-}
-
 
 function setupImageUpload() {
   const uploadBtn = document.getElementById('uploadImageBtn');

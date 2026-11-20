@@ -35,58 +35,6 @@ li {
   position: relative;
 }
 
-/* Theme toggle button */
-.theme-toggle-li {
-  display: flex;
-  align-items: center;
-}
-
-.theme-toggle-li::after {
-  display: block !important;
-}
-
-.theme-toggle-btn {
-  background: none;
-  border: none;
-  color: global.$main-text-color1;
-  cursor: pointer;
-  padding: 0.75rem 1.5rem;
-  font-size: 1.1rem;
-  transition: all global.$transition-base;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-
-  &::before {
-    content: "";
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 0;
-    height: 2px;
-    background: global.$nav-active-color;
-    transition: width 0.3s ease;
-  }
-
-  &:hover {
-    color: global.$nav-hover-color;
-
-    &::before {
-      width: 60%;
-    }
-  }
-
-  i {
-    transition: transform 0.3s ease;
-  }
-
-  &:hover i {
-    transform: rotate(20deg);
-  }
-}
-
 li:not(:last-child)::after {
   content: "";
   position: absolute;

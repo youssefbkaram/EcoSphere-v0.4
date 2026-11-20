@@ -17,28 +17,12 @@ class NavbarComponent extends HTMLElement {
               </div>
               <div class="navbar-login">
                 <ul id="auth-section">
-                  <li class="theme-toggle-li">
-                    <button id="themeToggleBtn" class="theme-toggle-btn" title="Toggle dark mode">
-                      <i class="fas fa-moon"></i>
-                    </button>
-                  </li>
                   <li><a href="HTML/login.html">Login</a></li>
                   <li><a href="HTML/signup.html">Sign Up</a></li>
                 </ul>
               </div>
             </nav>
         `;
-
-    // Apply initial theme
-    this.applyTheme();
-
-    // Theme toggle button listener
-    const themeBtn = shadowRoot.getElementById("themeToggleBtn");
-    if (themeBtn) {
-      themeBtn.addEventListener("click", () => {
-        this.toggleTheme();
-      });
-    }
 
     // Handle active state on page load
     this.setActiveLink();
@@ -81,62 +65,6 @@ class NavbarComponent extends HTMLElement {
       this.updateAuthSection(shadowRoot);
     });
 
-    // Listen for theme changes from other tabs
-    window.addEventListener("storage", (e) => {
-      if (e.key === "theme") {
-        this.applyTheme();
-      }
-    });
-  }
-
-  applyTheme() {
-    const savedTheme = localStorage.getItem("theme");
-    const theme = savedTheme || "light";
-
-    if (theme === "dark") {
-      document.documentElement.classList.add("dark-mode");
-      // inject dark mode stylesheet if not already present
-      if (!document.getElementById("dark-mode-css")) {
-        const themeLink = document.createElement("link");
-        themeLink.rel = "stylesheet";
-        themeLink.id = "dark-mode-css";
-        themeLink.href = "../SCSS/dark-mode.css";
-        document.head.appendChild(themeLink);
-      }
-    } else {
-      document.documentElement.classList.remove("dark-mode");
-      // remove dark mode stylesheet
-      const darkLink = document.getElementById("dark-mode-css");
-      if (darkLink) {
-        darkLink.remove();
-      }
-    }
-
-    // Update icon
-    const themeBtn = this.shadowRoot?.getElementById("themeToggleBtn");
-    if (themeBtn) {
-      const icon = themeBtn.querySelector("i");
-      if (icon) {
-        if (theme === "dark") {
-          icon.className = "fas fa-sun";
-        } else {
-          icon.className = "fas fa-moon";
-        }
-      }
-    }
-
-    document.body.setAttribute("data-theme", theme);
-  }
-
-  toggleTheme() {
-    const currentTheme = localStorage.getItem("theme") || "light";
-    const newTheme = currentTheme === "dark" ? "light" : "dark";
-    localStorage.setItem("theme", newTheme);
-    this.applyTheme();
-    // Dispatch event so other components know about theme change
-    window.dispatchEvent(
-      new CustomEvent("themeChanged", { detail: { theme: newTheme } }),
-    );
   }
 
   updateAuthSection(shadowRoot) {
