@@ -9,7 +9,7 @@
 
 body {
   font-family: "Cairo", sans-serif;
-  color: white;
+  color: #1f2937;
 }
 
 .hero {
@@ -20,32 +20,14 @@ body {
   align-items: center;
   justify-content: center;
   text-align: center;
-  background: url("../MultiMedia/Images/test.jpg") center/cover no-repeat;
-}
-.hero .hero-video {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: 50% 0%;
-  z-index: -2;
-}
-.hero .hero-overlay {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(to right, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.1));
-  z-index: -1;
+  background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%);
 }
 .hero .hero-content {
   max-width: 900px;
   padding: 20px;
   animation: fadeUp 1.2s ease forwards;
   opacity: 0;
-  text-shadow: 2px 4px 8px rgba(0, 0, 0, 0.7);
+  text-shadow: none;
 }
 .hero .hero-content .subtitle {
   font-size: 1rem;
@@ -115,7 +97,7 @@ body {
 }
 .challenges .challenges-container .section-subtitle {
   font-size: 1.1rem;
-  color: rgba(255, 255, 255, 0.7);
+  color: #6b7280;
   margin-bottom: 3rem;
 }
 .challenges .challenges-container .challenges-grid {
@@ -240,7 +222,7 @@ body {
 
 /* ===== INNOVATION & TECHNOLOGY SECTION ===== */
 .innovation {
-  background: #1a1a1a;
+  background: #f9fafb;
   padding: 5rem 2rem;
   min-height: 100vh;
   display: flex;
@@ -255,11 +237,11 @@ body {
 .innovation .innovation-container h2 {
   font-size: 2.5rem;
   margin-bottom: 10px;
-  color: white;
+  color: #1f2937;
 }
 .innovation .innovation-container .section-subtitle {
   font-size: 1.1rem;
-  color: rgba(255, 255, 255, 0.7);
+  color: #6b7280;
   margin-bottom: 3rem;
 }
 .innovation .innovation-container .innovation-grid {
@@ -284,10 +266,10 @@ body {
 .innovation .innovation-container .innovation-grid .innovation-card h3 {
   font-size: 1.3rem;
   margin-bottom: 1rem;
-  color: white;
+  color: #1f2937;
 }
 .innovation .innovation-container .innovation-grid .innovation-card p {
-  color: rgba(255, 255, 255, 0.6);
+  color: #4b5563;
   line-height: 1.6;
 }
 .innovation .innovation-container .section-btn {
@@ -467,7 +449,7 @@ body {
 
 /* ===== FUTURE OUTLOOK SECTION ===== */
 .future {
-  background: #0f172a;
+  background: #f0fdf4;
   padding: 5rem 2rem;
   min-height: 100vh;
   display: flex;
@@ -482,11 +464,11 @@ body {
 .future .future-container h2 {
   font-size: 2.5rem;
   margin-bottom: 10px;
-  color: white;
+  color: #1f2937;
 }
 .future .future-container .section-subtitle {
   font-size: 1.1rem;
-  color: rgba(255, 255, 255, 0.7);
+  color: #6b7280;
   margin-bottom: 3rem;
 }
 .future .future-container .future-grid {
@@ -520,7 +502,7 @@ body {
   color: #06b6d4;
 }
 .future .future-container .future-grid .future-card p {
-  color: rgba(255, 255, 255, 0.6);
+  color: #4b5563;
   line-height: 1.6;
 }
 .future .future-container .section-btn {

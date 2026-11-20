@@ -15,12 +15,12 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: rgba(16, 16, 16, 0.1);
+  background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
   transition: background 0.3s ease, backdrop-filter 0.3s ease;
 }
 .navbar.navbar-solid {
-  background: #101010;
+  background: #ffffff;
   backdrop-filter: none;
 }
 .navbar {
@@ -49,11 +49,11 @@ li:not(:last-child)::after {
   transform: translateY(-50%);
   width: 1px;
   height: 20px;
-  background: white;
+  background: #1f2937;
 }
 
 a {
-  color: white;
+  color: #1f2937;
   text-decoration: none;
   padding: 0.75rem 1.5rem;
   display: block;
@@ -97,7 +97,7 @@ a.active::before {
 .profile-btn {
   background: none;
   border: none;
-  color: white;
+  color: #1f2937;
   padding: 0.5rem 1rem;
   display: flex;
   align-items: center;
@@ -132,7 +132,7 @@ a.active::before {
   height: 32px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid white;
+  border: 2px solid #1f2937;
   transition: transform 0.3s ease;
 }
 .profile-avatar:hover {

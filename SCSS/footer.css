@@ -8,14 +8,14 @@
 }
 
 .site-footer {
-  background: #101010;
-  color: white;
+  background: #ffffff;
+  color: #1f2937;
   padding: 1rem 2rem;
   font-size: 0.875rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid rgba(31, 41, 55, 0.1);
   font-family: "Cairo", sans-serif;
   transition: background 0.3s ease, backdrop-filter 0.3s ease;
 }
@@ -41,7 +41,7 @@
 }
 
 .footer-right a {
-  color: white;
+  color: #1f2937;
   text-decoration: none;
   padding: 0.5rem 1rem;
   position: relative;
