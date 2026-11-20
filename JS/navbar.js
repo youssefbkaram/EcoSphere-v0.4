@@ -91,10 +91,7 @@ class NavbarComponent extends HTMLElement {
 
   applyTheme() {
     const savedTheme = localStorage.getItem("theme");
-    const prefersDark =
-      window.matchMedia &&
-      window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const theme = savedTheme ? savedTheme : prefersDark ? "dark" : "light";
+    const theme = savedTheme || "light";
 
     if (theme === "dark") {
       document.documentElement.classList.add("dark-mode");
@@ -132,11 +129,7 @@ class NavbarComponent extends HTMLElement {
   }
 
   toggleTheme() {
-    const currentTheme =
-      localStorage.getItem("theme") ||
-      (window.matchMedia("(prefers-color-scheme: dark)").matches
-        ? "dark"
-        : "light");
+    const currentTheme = localStorage.getItem("theme") || "light";
     const newTheme = currentTheme === "dark" ? "light" : "dark";
     localStorage.setItem("theme", newTheme);
     this.applyTheme();
