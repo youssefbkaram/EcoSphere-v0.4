@@ -127,15 +127,14 @@ async function checkEmailExists(email, feedbackElement) {
   clearTimeout(emailTimeout);
   emailTimeout = setTimeout(async () => {
     try {
-      const resp = await fetch('/api/check-email', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email })
-      });
+      const resp = await fetch(`/api/check-email?email=${encodeURIComponent(email)}`);
+      if (!resp.ok) {
+        throw new Error('Email availability check failed');
+      }
       const data = await resp.json();
 
       if (feedbackElement) {
-        if (data.exists) {
+        if (!data.available) {
           feedbackElement.textContent = '✓ Email already registered';
           feedbackElement.classList.remove('invalid');
           feedbackElement.classList.add('valid', 'visible');
@@ -167,16 +166,16 @@ function updateProfanityWarning(textarea) {
 
 // ===== SEND EMAIL =====
 async function sendContactEmail(data) {
-  try {
-    const resp = await fetch('/api/send-contact', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
-    });
-    return resp.json();
-  } catch (err) {
-    return { success: false, error: 'Network error' };
+  const resp = await fetch('/api/send-contact', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  });
+  const result = await resp.json();
+  if (!resp.ok) {
+    throw new Error(result.error || 'Failed to send message');
   }
+  return result;
 }
 
 // ===== SHOW CONFIRMATION =====
@@ -262,8 +261,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     showConfirmation({
       fullName: nameInput.value.trim(),
       email: emailInput.value.trim(),
-      message: messageInput.value.trim(),
-      to: 'youssefbhaa2010@gmail.com'
+      message: messageInput.value.trim()
     });
   });
 
@@ -275,9 +273,6 @@ document.addEventListener('DOMContentLoaded', async function() {
     // Disable button and show loading state
     submitBtn.disabled = true;
     submitBtn.textContent = 'Sending...';
-
-    // Simulate delay
-    await new Promise(resolve => setTimeout(resolve, 800));
 
     try {
       const result = await sendContactEmail(data);
@@ -301,7 +296,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         submitBtn.textContent = 'Send Message';
       }
     } catch (err) {
-      showNotification('An error occurred. Please try again.', 'error');
+      showNotification(err.message || 'An error occurred. Please try again.', 'error');
       submitBtn.disabled = false;
       submitBtn.textContent = 'Send Message';
     }

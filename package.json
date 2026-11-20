@@ -1,22 +1,33 @@
 {
-  "name": "the-website",
+  "name": "ecosphere",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "EcoSphere environmental solutions platform",
+  "main": "BackEnd/server.js",
   "scripts": {
     "start": "node BackEnd/server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "node BackEnd/server.js",
+    "check": "node --check BackEnd/server.js && node --check BackEnd/db.js && node --check api/[...path].js && node --check JS/about.js",
+    "test": "npm run check"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/doctorgames111/EcoSphere-v0.4.git"
+    "url": "git+https://github.com/youssefbkaram/EcoSphere-v0.4.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
-  "bugs": {
-    "url": "https://github.com/doctorgames111/EcoSphere-v0.4/issues"
+  "engines": {
+    "node": ">=20"
   },
-  "homepage": "https://github.com/doctorgames111/EcoSphere-v0.4#readme"
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "pg": "^8.18.0"
+  },
+  "bugs": {
+    "url": "https://github.com/youssefbkaram/EcoSphere-v0.4/issues"
+  },
+  "homepage": "https://github.com/youssefbkaram/EcoSphere-v0.4#readme"
 }

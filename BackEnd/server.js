@@ -1,16 +1,56 @@
+const path = require('path');
 require('dotenv').config();
+require('dotenv').config({ path: path.join(__dirname, '.env') });
 const express = require('express');
 const bcrypt = require('bcrypt');
 const pool = require('./db'); // connect to Neon
 
 const app = express();
-const path = require('path');
 
-app.use(express.json());
-app.use(express.static(path.join(__dirname, '..'))); // Serve all static files
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'HTML', 'index.html')); // Serve main page
+app.use(express.json({ limit: '3mb' }));
+
+if (require.main === module) {
+  app.use(express.static(path.join(__dirname, '..')));
+  app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'HTML', 'index.html'));
+  });
+}
+
+let dbInitialization;
+function ensureDbInitialized() {
+  if (!process.env.DATABASE_URL) {
+    return Promise.reject(new Error('DATABASE_URL is required'));
+  }
+  if (!dbInitialization) {
+    dbInitialization = initDb();
+  }
+  return dbInitialization;
+}
+
+app.get('/api/health', async (req, res) => {
+  try {
+    await ensureDbInitialized();
+    await pool.query('SELECT 1');
+    res.json({ status: 'ok', database: 'connected' });
+  } catch (err) {
+    console.error('Health check failed:', err);
+    res.status(503).json({ status: 'error', database: 'unavailable' });
+  }
 });
+
+app.use(
+  [
+    '/api/signup',
+    '/api/check-username',
+    '/api/check-email',
+    '/api/login',
+    '/api/update-account',
+    '/api/upload-profile-image'
+  ],
+  (req, res, next) => {
+    ensureDbInitialized().then(() => next(), next);
+  }
+);
 
 /* =========================
    SIGNUP
@@ -333,6 +373,61 @@ app.post('/api/upload-profile-image', async (req, res) => {
 });
 
 /* =========================
+   CONTACT FORM
+========================= */
+app.post('/api/send-contact', async (req, res) => {
+  const { fullName, email, message } = req.body;
+  const validEmail = typeof email === 'string' && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+  if (
+    typeof fullName !== 'string' ||
+    fullName.trim().length < 3 ||
+    fullName.trim().length > 50 ||
+    !validEmail ||
+    typeof message !== 'string' ||
+    message.trim().length < 10 ||
+    message.trim().length > 2000
+  ) {
+    return res.status(400).json({ error: 'Please provide a valid name, email, and message' });
+  }
+
+  if (
+    !process.env.RESEND_API_KEY ||
+    !process.env.CONTACT_FROM_EMAIL ||
+    !process.env.CONTACT_TO_EMAIL
+  ) {
+    return res.status(503).json({ error: 'Contact form is not configured' });
+  }
+
+  try {
+    const response = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        from: process.env.CONTACT_FROM_EMAIL,
+        to: [process.env.CONTACT_TO_EMAIL],
+        reply_to: email.trim(),
+        subject: 'EcoSphere contact form message',
+        text: `From: ${fullName.trim()}\nEmail: ${email.trim()}\n\n${message.trim()}`
+      })
+    });
+
+    if (!response.ok) {
+      console.error('Contact email provider returned status:', response.status);
+      return res.status(502).json({ error: 'Failed to send message' });
+    }
+
+    return res.json({ success: true });
+  } catch (err) {
+    console.error('Contact email request failed:', err);
+    return res.status(502).json({ error: 'Failed to send message' });
+  }
+});
+
+/* =========================
    NEWS FETCHING - Guardian
 ========================= */
 // Node 18+ provides global fetch; no need for node-fetch import
@@ -429,27 +524,37 @@ app.get('/api/news', async (req, res) => {
 
 // ensure users table exists
 async function initDb() {
-  try {
-    await pool.query(`
-      CREATE TABLE IF NOT EXISTS users (
-        id SERIAL PRIMARY KEY,
-        username TEXT UNIQUE NOT NULL,
-        first_name TEXT,
-        last_name TEXT,
-        email TEXT UNIQUE NOT NULL,
-        password TEXT NOT NULL,
-        pin TEXT
-      )
-    `);
-    // if table already existed before we added pin, make sure column exists
-    await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS pin TEXT`);
-    console.log('Verified users table exists and pin column is present');
-  } catch (err) {
-    console.error('Error initializing database:', err);
-  }
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS users (
+      id SERIAL PRIMARY KEY,
+      username TEXT UNIQUE NOT NULL,
+      first_name TEXT,
+      last_name TEXT,
+      email TEXT UNIQUE NOT NULL,
+      password TEXT NOT NULL,
+      pin TEXT,
+      profile_image TEXT
+    )
+  `);
+  await pool.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS pin TEXT');
+  await pool.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS profile_image TEXT');
+  console.log('Verified users table and profile columns');
 }
 
-const port = process.env.PORT || 3000;
-initDb().then(() => {
-  app.listen(port, () => console.log(`Server running on http://localhost:${port}`));
+app.use((err, req, res, next) => {
+  console.error('Unhandled request error:', err);
+  if (res.headersSent) {
+    return next(err);
+  }
+  const status = err.status && err.status < 500 ? err.status : 503;
+  res.status(status).json({
+    error: status === 400 ? 'Invalid request body' : 'Service temporarily unavailable'
+  });
 });
+
+if (require.main === module) {
+  const port = process.env.PORT || 3000;
+  app.listen(port, () => console.log(`Server running on http://localhost:${port}`));
+}
+
+module.exports = app;
